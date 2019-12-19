@@ -8,10 +8,74 @@
   <script type="module" src="/build/videobackgroundscroll.esm.js"></script>
   <script nomodule src="/build/videobackgroundscroll.js"></script>
 
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+    }
+
+    .demo {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .demo__block {
+      min-height: 60vh;
+      font-size: 24px;
+      color: #ffffff;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .demo__block p {
+      margin-top: 20%;
+    }
+
+    .demo__block--1 {
+      background-color: #795448;
+    }
+
+    .demo__block--2 {
+      background-color: #029587;
+    }
+
+    .demo__block--3 {
+      background-color: #6739B6;
+    }
+
+    .demo__block--4 {
+      background-color: #FF9800;
+    }
+  </style>
 </head>
 <body>
 
-  <my-component first="Stencil" last="'Don't call me a framework' JS"></my-component>
+  <div class="demo">
+    <div class="demo__block demo__block--1">
+      <p>Video background demo</p>
+    </div>
+
+    <div class="demo__block demo__block--2">
+      <p>Text box placeholder</p>
+    </div>
+
+    <crn-video-background speed="200">
+      <video id="background-video" autobuffer preload>
+        <source type="video/webm; codecs=&quot;vp8, vorbis&quot;" src="https://www.html5rocks.com/tutorials/video/basics/Chrome_ImF.webm" />
+        <source type="video/ogg; codecs=&quot;theora, vorbis&quot;" src="https://www.html5rocks.com/tutorials/video/basics/Chrome_ImF.ogv" />
+        <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src="https://www.html5rocks.com/tutorials/video/basics/Chrome_ImF.mp4" />
+        <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
+      </video>
+    </crn-video-background>
+
+    <div class="demo__block demo__block--3">
+      <p>Text box placeholder</p>
+    </div>
+
+    <div class="demo__block demo__block--4">
+      <p>Text box placeholder</p>
+    </div>
+  </div>
 
 </body>
 </html>

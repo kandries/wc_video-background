@@ -11,21 +11,25 @@ export class VideoBackground {
   * Variables
   */
   videoWrapper: HTMLDivElement;
+  videoElement: HTMLVideoElement;
 
   @Element() host: HTMLDivElement;
 
+  @Prop() videoSource: string;
   @Prop() speed: number;
 
   /*
   * Private functions
   */
-  isVideoInViewport() {
-    const elementTop = this.videoWrapper.getBoundingClientRect().top;
-    const elementBottom = this.videoWrapper.getBoundingClientRect().bottom;
-    const viewportTop = window.pageYOffset || document.documentElement.scrollTop;
-    const viewportBottom = viewportTop + window.innerHeight;
+  isInViewport(el, percentVisible) {
+    let
+      rect = el.getBoundingClientRect(),
+      windowHeight = (window.innerHeight || document.documentElement.clientHeight);
 
-    return elementBottom > viewportTop && elementTop < viewportBottom;
+    return !(
+      Math.floor(100 - (((rect.top >= 0 ? 0 : rect.top) / +-(rect.height)) * 100)) < percentVisible ||
+      Math.floor(100 - ((rect.bottom - windowHeight) / rect.height) * 100) < percentVisible
+    )
   };
 
 
@@ -34,7 +38,8 @@ export class VideoBackground {
   */
   @Listen('scroll', { target: 'window' })
   handleScroll() {
-    console.log(this.isVideoInViewport());
+    const isVideoInViewport = this.isInViewport(this.videoElement, 0);
+    console.log('video in viewport:', isVideoInViewport);
   }
 
 
@@ -42,12 +47,7 @@ export class VideoBackground {
   * Lifecycle hooks
   */
   componentDidLoad() {
-    const slotted = this.host.shadowRoot.querySelector('slot') as HTMLSlotElement;
-    const video = slotted.assignedNodes().filter((node) => {
-      return node.nodeName === 'VIDEO';
-    });
-
-    console.log(video);
+    //
   }
 
 
@@ -57,7 +57,10 @@ export class VideoBackground {
   render() {
     return (
       <div class="crn-video-background" ref={el => this.videoWrapper = el}>
-        <slot />
+        <video id="background-video" class="background-video" preload="" ref={el => this.videoElement = el}>
+          <source type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;" src={this.videoSource} />
+          <p>Sorry, your browser does not support the &lt;video&gt; element.</p>
+        </video>
       </div>
     )
   }

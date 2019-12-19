@@ -1,3 +1,4 @@
-::slotted(video) {
+.background-video {
+  display: block;
   width: 100%;
 }

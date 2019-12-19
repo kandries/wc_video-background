@@ -11,21 +11,7 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 export namespace Components {
   interface CrnVideoBackground {
-    'speed': number;
-  }
-  interface MyComponent {
-    /**
-    * The first name
-    */
-    'first': string;
-    /**
-    * The last name
-    */
-    'last': string;
-    /**
-    * The middle name
-    */
-    'middle': string;
+    'videoSource': string;
   }
 }
 
@@ -37,40 +23,18 @@ declare global {
     prototype: HTMLCrnVideoBackgroundElement;
     new (): HTMLCrnVideoBackgroundElement;
   };
-
-  interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {}
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
-  };
   interface HTMLElementTagNameMap {
     'crn-video-background': HTMLCrnVideoBackgroundElement;
-    'my-component': HTMLMyComponentElement;
   }
 }
 
 declare namespace LocalJSX {
   interface CrnVideoBackground {
-    'speed'?: number;
-  }
-  interface MyComponent {
-    /**
-    * The first name
-    */
-    'first'?: string;
-    /**
-    * The last name
-    */
-    'last'?: string;
-    /**
-    * The middle name
-    */
-    'middle'?: string;
+    'videoSource'?: string;
   }
 
   interface IntrinsicElements {
     'crn-video-background': CrnVideoBackground;
-    'my-component': MyComponent;
   }
 }
 
@@ -81,7 +45,6 @@ declare module "@stencil/core" {
   export namespace JSX {
     interface IntrinsicElements {
       'crn-video-background': LocalJSX.CrnVideoBackground & JSXBase.HTMLAttributes<HTMLCrnVideoBackgroundElement>;
-      'my-component': LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
     }
   }
 }

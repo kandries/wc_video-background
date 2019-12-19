@@ -1,4 +1,4 @@
-import { Component, Element, Prop, Listen, h } from '@stencil/core';
+import { Component, Element, Prop, State, Listen, h } from '@stencil/core';
 
 @Component({
   tag: 'crn-video-background',
@@ -16,30 +16,57 @@ export class VideoBackground {
   @Element() host: HTMLDivElement;
 
   @Prop() videoSource: string;
-  @Prop() speed: number;
+
+  @State() playbackSpeed: number;
 
   /*
   * Private functions
   */
   isInViewport(el, percentVisible) {
-    let
-      rect = el.getBoundingClientRect(),
-      windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+    const rect = el.getBoundingClientRect(),
+          windowHeight = (window.innerHeight || document.documentElement.clientHeight);
 
-    return !(
-      Math.floor(100 - (((rect.top >= 0 ? 0 : rect.top) / +-(rect.height)) * 100)) < percentVisible ||
-      Math.floor(100 - ((rect.bottom - windowHeight) / rect.height) * 100) < percentVisible
+    return (
+      Math.floor(100 - (((rect.top >= 0 ? 0 : rect.top) / +-(rect.height)) * 100)) >= percentVisible &&
+      Math.floor(100 - ((rect.bottom - windowHeight) / rect.height) * 100) >= percentVisible
     )
   };
 
+  getVideoLength() {
+    const self = this;
+
+    // Set the video duration in seconds when it's loaded
+    let i = setInterval(function() {
+      if(self.videoElement.readyState > 0) {
+        const videoDuration = self.videoElement.duration % 60;
+        const totalHeightToPlay = self.videoWrapper.clientHeight + window.innerHeight;
+        self.playbackSpeed = Math.round(totalHeightToPlay / videoDuration);
+        clearInterval(i);
+      }
+    }, 200);
+  }
+
+  setAnimationFrame() {
+    const isVideoInViewport = this.videoElement && this.isInViewport(this.videoElement, 0);
+    if(isVideoInViewport) {
+      window.requestAnimationFrame(this.scrollPlay.bind(this));
+    }
+  }
+
+  scrollPlay() {
+    const elementTop = this.videoWrapper.getBoundingClientRect().top;
+    const viewportBottom = window.screenY + window.innerHeight;
+    const elementOffset = viewportBottom - elementTop;
+
+    this.videoElement.currentTime = elementOffset / this.playbackSpeed;
+  }
 
   /*
   * Lifecycle hooks
   */
   @Listen('scroll', { target: 'window' })
   handleScroll() {
-    const isVideoInViewport = this.isInViewport(this.videoElement, 0);
-    console.log('video in viewport:', isVideoInViewport);
+    this.setAnimationFrame();
   }
 
 
@@ -47,7 +74,8 @@ export class VideoBackground {
   * Lifecycle hooks
   */
   componentDidLoad() {
-    //
+    this.getVideoLength();
+    //this.setAnimationFrame();
   }
 
 
